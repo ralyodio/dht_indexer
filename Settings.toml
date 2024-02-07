@@ -1,0 +1,5 @@
+[settings]
+database_name = "tracker_database"
+database_dir_name = "database"
+time_interval = 30000
+dht_port = 20000

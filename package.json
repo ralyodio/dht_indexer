@@ -1,0 +1,34 @@
+{
+    "type": "module",
+    "name": "dht_indexer",
+    "version": "1.0.0",
+    "description": "A DHT indexer/crawler implemented in Node.js, designed to connect to each infohash through WebTorrent to retrieve information about seeders, leechers, and metadata associated with each infohash.",
+    "main": "src/main.js",
+    "scripts": {
+        "start": "node --no-warnings src/main.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/0xf333/dht_indexer.git"
+    },
+    "keywords": [
+        "indexer",
+        "torrent",
+        "dht"
+    ],
+    "author": "0xf333",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/0xf333/dht_indexer/issues"
+    },
+    "homepage": "https://github.com/0xf333/dht_indexer#readme",
+    "dependencies": {
+        "bittorrent-dht": "~11.0.5",
+        "crypto": "~1.0.1",
+        "magnet-uri": "~7.0.5",
+        "sqlite3": "~5.1.7",
+        "toml": "^3.0.0",
+        "webtorrent": "~2.1.34"
+    }
+}

@@ -25,7 +25,6 @@
     "homepage": "https://github.com/0xf333/dht_indexer#readme",
     "dependencies": {
         "bittorrent-dht": "~11.0.5",
-        "crypto": "~1.0.1",
         "magnet-uri": "~7.0.5",
         "sqlite3": "~5.1.7",
         "toml": "^3.0.0",

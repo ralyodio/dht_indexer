@@ -1,22 +1,24 @@
 import middleware from './middleware.js';
-import dotenv from 'dotenv';
-dotenv.config();
 
 const { 
     indexer, 
     indentation, 
     closeConnection, 
-    hashesArray 
+    hashsArray 
 } = middleware;
 
 
-hashesArray.forEach(async (hash) => {
-    await indexer(hash);
-});
+const main = () => {
+    Promise.all(hashsArray.map(hash => indexer(hash)))
+        .catch(error => console.log(error))
+}
 
 
 process.on('SIGINT', () => {
-    console.log(`${indentation(4)}<--- Closing tracking the app\n`);
+    console.log(`${indentation(4)}<--- Closing the dht_indexer\n`);
     closeConnection();
     process.exit();
 });
+
+
+main();

@@ -22,7 +22,7 @@ const {
 const dht = new DHT()
 let visited = new Set()
 
-const hashesArray = getInitialHashes('./example/initial_hashes.csv');
+let hashsArray = getInitialHashes('./example/initial_hashes.csv');
 
 
 openConnection(databaseName).then(() => {
@@ -67,5 +67,5 @@ export default {
     indexer,
     closeConnection,
     indentation,
-    hashesArray
+    hashsArray
 };

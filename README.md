@@ -6,7 +6,8 @@ git clone https://github.com/0xf333/dht_indexer.git
 ```
 
 2. Install dependencies
-Navigate to the project directory and run
+
+_Navigate to the project directory and run_
 ```bash
 npm install && npm fund
 ```

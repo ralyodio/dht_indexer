@@ -6,7 +6,9 @@
     "main": "src/main.js",
     "scripts": {
         "start": "node --no-warnings src/main.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "hash_hunter": "node src/app_modules/hashs_hunter.js"
+        
     },
     "repository": {
         "type": "git",
@@ -25,9 +27,10 @@
     "homepage": "https://github.com/0xf333/dht_indexer#readme",
     "dependencies": {
         "bittorrent-dht": "~11.0.5",
+        "dht-infohash-crawler": "~0.3.2",
         "magnet-uri": "~7.0.5",
         "sqlite3": "~5.1.7",
-        "toml": "^3.0.0",
+        "toml": "~3.0.0",
         "webtorrent": "~2.1.34"
     }
 }

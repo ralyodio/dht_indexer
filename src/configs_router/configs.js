@@ -7,7 +7,8 @@ const databaseName = config.settings.database_name;
 const databaseDirectory = config.settings.database_dir_name;
 const dhtPort = config.settings.dht_port;
 const timeInterval = config.settings.time_interval;
-
+const hashHuntersPort = config.settings.hash_hunters_port;
+const numberOfHunters = config.settings.number_of_hunters;
 
 // For console logs formating purposes
 const indentation = (size) => ' '.repeat(size);
@@ -26,6 +27,7 @@ const getInitialHashes = (csvFilePath) => {
     }
     const hashes = data.split('\n');
     hashes.shift();
+    hashes.pop();
 
     return hashes;
 }
@@ -36,6 +38,8 @@ export default {
     databaseDirectory,
     dhtPort,
     timeInterval,
+    hashHuntersPort,
+    numberOfHunters,
     indentation,
     getInitialHashes
 };

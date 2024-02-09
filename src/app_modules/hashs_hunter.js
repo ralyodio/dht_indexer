@@ -1,91 +1,108 @@
-import DHT from 'bittorrent-dht';
-import { randomBytes } from 'crypto';
+import createCrawler from 'dht-infohash-crawler';
+import configs from '../configs_router/configs.js';
 import fs from 'fs';
 import { join } from 'path';
-import configs from '../configs_router/configs.js';
 
-const { dhtPort } = configs;
+const { 
+    indentation, 
+    hashHuntersPort, 
+    numberOfHunters 
+} = configs;
 
 
-const torrentHashHunter = () => {
-    const dht = new DHT();
-    const infoHashes = new Set();
+const KBUCKET_SIZE = 128;
 
-    dht.listen(dhtPort, () => {
-        console.log(`\n>>> Now listening to DHT for new torrent hashes: ${dhtPort}`);
-    });
-
-    // This is to initiate a lookup for a random infoHash
-    // to stimulate traffic which in return will help with
-    // geting access to dht network data
-    const randomInfoHash = () => {
-        return randomBytes(20).toString('hex');
+const DEFAULT_BUFFER_SIZE = 1024;
+class customBuffer {
+    constructor(capacity = DEFAULT_BUFFER_SIZE) {
+        this._capacity = Math.floor((capacity + 15) / 16);
+        this._infohashes = Array.from({ length: 16 }, () => new Map());
     }
 
-    const performLookup = () => {
-        const infoHash = randomInfoHash();
-        dht.lookup(infoHash)
-    }
+    enqueue(infohashString) {
+        const infohashIndex = parseInt(infohashString[0], 16);
+        const infoHashesMap = this._infohashes[infohashIndex];
 
-    // Performing initial lookup
-    performLookup();
+        if (!infoHashesMap.has(infohashString)) {
+            if (infoHashesMap.size >= this._capacity) {
+                let oldestKey = infoHashesMap.keys().next().value;
+                infoHashesMap.delete(oldestKey);
+            }
 
-    // And then perform lookups periodically to stimulate traffic.
-    setInterval(() => {
-        performLookup();
-    }, 500); 
-
-    dht.on('announce', (peer, infoHash) => {
-        infoHash = infoHash.toString('hex');
-
-        if (!infoHashes.has(infoHash)) { 
-            infoHashes.add(infoHash);
-            //console.log(`\n>>> Peer: ${peer} \nNew infoHash announced:\n${infoHash}\n`);
-            console.log(
-                '>>> Peer discovered --> ', peer,
-                `\nNew infoHash announced:\n--> ${infoHash}\n`
-            );
-
-            // striping any potential formatting from the infoHash
-            let stripedInfoHash = infoHash
-                .replace(/(\r\n|\n|\r)/gm, "")
-                .toUpperCase();
-
-            _writeInfoHashToFile(stripedInfoHash);
-
+            infoHashesMap.set(infohashString, infohashString);
+            return true;
         }
-    });
 
-    // Listening for errors
-    dht.on('error', (err) => {
-        console.error('Error:', err);
-    });
+        return false;
+    }
+}
+
+let hashCount = 0;
+setInterval(() => {
+    console.log(`\n>>> Number of new hashes fund in the last 15 minutes: ${hashCount}\n`);
+    hashCount = 0;
+}, 15 * 60 * 1000);
+
+
+const recentInfohashes = new customBuffer(1024);
+const torrentHashHunters = (numOfCrawlers) => {
+    console.log('\n>>> Starting torrent hash search...');
+    console.log(`${indentation(4)}---> Number of DHT crawlers: ${numOfCrawlers}\n`);
+
+    Array(numOfCrawlers >= 5 ? 5 : numOfCrawlers)
+        .fill(undefined)
+        .forEach((_, index) => {
+            let crawler = createCrawler({
+                address: '0.0.0.0',
+                port: hashHuntersPort + index,
+                kbucketSize: KBUCKET_SIZE,
+                name: `Hunter --> ${index + 1}`
+            });
+        
+            crawler.on('infohash', (infohash, peerId, peerAddr) => {
+                if (!recentInfohashes.enqueue(infohash))
+                    return;
+
+                console.log('\n--------------------------------------------\n');
+                console.log(`Discovered new infoHash:\n---> ${infohash}`);
+                console.log('\n--------------------------------------------');
+
+                _writeInfoHashToFile(infohash);
+                hashCount++;
+            });
+        });
+        console.log('>>> Now hunting for new infoHashes...\n')
 
 }
 
 
-const _writeInfoHashToFile = (infoHash) => {
+const _writeInfoHashToFile = (infoHashToSave) => {
     const filePath = join(process.cwd(), './example/initial_hashes.csv');
-
+    
+    let infoHash = infoHashToSave
+        .replace(/(\r\n|\n|\r)/gm, "")
+        .toUpperCase();
+    
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
             console.error(`Failed to read file: ${err}`);
             return;
         }
+        
+        let fileData = data
+            .endsWith('\n') ? data : data.concat('\n');
 
-        let fileData = data;
-        if (!data.endsWith('\n')) {
-            fileData += '\n';
-        }
-
-        fs.appendFile(filePath, `${infoHash}\n`, (err) => {
+        fileData = fileData
+            .concat(infoHash)
+            .concat('\n');
+        
+        fs.writeFile(filePath, fileData, (err) => {
             if (err) {
                 console.error(`Failed to write infoHash to file: ${err}`);
             }
         });
     });
-
 }
 
 
-//torrentHashHunter();
+torrentHashHunters(numberOfHunters);

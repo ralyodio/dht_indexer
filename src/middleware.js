@@ -24,11 +24,10 @@ let visited = new Set()
 
 let hashsArray = getInitialHashes('./example/initial_hashes.csv');
 
-
 openConnection(databaseName).then(() => {
     console.log(`${indentation(4)}---> Connection to database established\n`);
     console.log(
-        `>>> Time interval set to check every ${timeInterval / 60000} minutes <<<\n`,
+        `>>> Time interval set to check every ${timeInterval} minutes <<<\n`,
         `${indentation(3)}---> Please wait for the tracking session to start...\n`,
     );
     console.log('================================================\n');

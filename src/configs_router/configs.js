@@ -26,7 +26,6 @@ const getInitialHashes = (csvFilePath) => {
         return [];
     }
     const hashes = data.split('\n');
-    hashes.shift();
     hashes.pop();
 
     return hashes;

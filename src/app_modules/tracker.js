@@ -16,6 +16,7 @@ const {
 
 
 const client = new WebTorrent();
+const millisecondsTimeInterval = timeInterval  * 60 * 1000;
 
 const trackTorrent = (infoHash) => {
     client.add(infoHash, async (torrent) => {
@@ -83,7 +84,7 @@ const trackTorrent = (infoHash) => {
         updateTorrentInfo();
 
         // Periodic run
-        setInterval(updateTorrentInfo, timeInterval);
+        setInterval(updateTorrentInfo, millisecondsTimeInterval);
     });
 };
 

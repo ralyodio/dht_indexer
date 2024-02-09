@@ -60,17 +60,27 @@ const torrentHashHunters = (numOfCrawlers) => {
             });
         
             crawler.on('infohash', (infohash, peerId, peerAddr) => {
-                if (!recentInfohashes.enqueue(infohash))
-                    return;
+                try {
+                    if (!recentInfohashes.enqueue(infohash)) return;
+                    
+                    console.log('\n--------------------------------------------\n');
+                    console.log(`Discovered new infoHash:\n---> ${infohash}\n`);
+                    console.log('--------------------------------------------');
+                    
+                    _writeInfoHashToFile(infohash);
+                    hashCount++;
 
-                console.log('\n--------------------------------------------\n');
-                console.log(`Discovered new infoHash:\n---> ${infohash}`);
-                console.log('\n--------------------------------------------');
+                } catch (error) {
+                    console.error(
+                        '\n>>> Skipping current event due to a network error\n',
+                        '---> Will try again on the next run'
+                    );
+                }
 
-                _writeInfoHashToFile(infohash);
-                hashCount++;
             });
+
         });
+    
         console.log('>>> Now hunting for new infoHashes...\n')
 
 }

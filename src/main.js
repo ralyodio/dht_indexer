@@ -1,18 +1,14 @@
 import middleware from './middleware.js';
-
 const { 
-    indexer, 
     indentation, 
     closeConnection, 
-    hashsArray 
+    startStream
 } = middleware;
 
 
 const main = () => {
-    Promise.all(hashsArray.map(hash => indexer(hash)))
-        .catch(error => console.log(error))
+    startStream();
 }
-
 
 process.on('SIGINT', () => {
     console.log(`${indentation(4)}<--- Closing the dht_indexer\n`);
@@ -21,4 +17,4 @@ process.on('SIGINT', () => {
 });
 
 
-main();
+ main();

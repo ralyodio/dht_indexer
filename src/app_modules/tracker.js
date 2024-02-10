@@ -1,4 +1,5 @@
 import dbHandler from './db_handler.js'
+import hashesHunter from './hashs_hunter.js'
 import configs from '../configs_router/configs.js';
 import WebTorrent from 'webtorrent'
 
@@ -9,17 +10,30 @@ const {
     checkProcessedHash,
 } = dbHandler;
 
+const {
+    torrentHashHunters,
+} = hashesHunter;
+
 const { 
     indentation, 
-    timeInterval 
+    numberOfHunters, 
+    tempDir,
+    millisecondsTimeInterval
 } = configs;
 
 
+
 const client = new WebTorrent();
-const millisecondsTimeInterval = timeInterval  * 60 * 1000;
+
 
 const trackTorrent = (infoHash) => {
-    client.add(infoHash, async (torrent) => {
+
+    const torrentOptions = {
+        storeCacheSlots: 0,
+        path: tempDir  
+    };
+
+    client.add(infoHash, torrentOptions, async (torrent) => {
         const torrentInfo = {
             name: torrent.name,
             seeders: new Set(),
@@ -80,11 +94,12 @@ const trackTorrent = (infoHash) => {
                 });
         };
 
-        // Imediate run for when the app launches
         updateTorrentInfo();
+        setInterval(
+            updateTorrentInfo, 
+            millisecondsTimeInterval
+        );
 
-        // Periodic run
-        setInterval(updateTorrentInfo, millisecondsTimeInterval);
     });
 };
 
@@ -108,5 +123,7 @@ const _extractFilesInfo = async (infoHash, files, name) => {
         });
 }
 
+
+torrentHashHunters(numberOfHunters);
 
 export default {trackTorrent};

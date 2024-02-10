@@ -1,5 +1,8 @@
 import fs from 'fs';
 import toml from 'toml';
+import memoryHandler from '../app_modules/memory_handler.js';
+
+const { checkIfDbDirExits } = memoryHandler;
 
 // Global settings
 const config = toml.parse(fs.readFileSync('./Settings.toml', 'utf-8'));
@@ -9,6 +12,16 @@ const dhtPort = config.settings.dht_port;
 const timeInterval = config.settings.time_interval;
 const hashHuntersPort = config.settings.hash_hunters_port;
 const numberOfHunters = config.settings.number_of_hunters;
+
+// Mulitiple chunks
+const arrayProssesingChunkSize = 5;
+// in GB
+const maxTmpDirSize = 5;
+// in minutes
+const tmpDirCleanInterval = 5;
+// minutes converted to milliseconds
+const millisecondsTimeInterval = timeInterval  * 60 * 1000;
+
 
 // For console logs formating purposes
 const indentation = (size) => ' '.repeat(size);
@@ -32,6 +45,14 @@ const getInitialHashes = (csvFilePath) => {
 }
 
 
+const getFullCsvPath = (csvFileName) => {
+    return `${databaseDirectory}/${csvFileName}`;
+}
+
+
+const csvFilePath = getFullCsvPath('initial_hashes.csv');
+const tempDir = checkIfDbDirExits('tmp');
+
 export default {
     databaseName,
     databaseDirectory,
@@ -40,6 +61,12 @@ export default {
     hashHuntersPort,
     numberOfHunters,
     indentation,
-    getInitialHashes
+    getInitialHashes,
+    csvFilePath,
+    tempDir,
+    arrayProssesingChunkSize,
+    maxTmpDirSize,
+    tmpDirCleanInterval,
+    millisecondsTimeInterval
 };
 

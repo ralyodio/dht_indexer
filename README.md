@@ -16,6 +16,3 @@ npm install && npm fund
 ```bash
 npm start
 ```
-
-## Further info
-Please check the `example/readme.md` 

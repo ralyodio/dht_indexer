@@ -1,0 +1,36 @@
+diff --git a/node_modules/dht-infohash-crawler/lib/dhtcrawler.js b/node_modules/dht-infohash-crawler/lib/dhtcrawler.js
+index e86a87e..1578665 100644
+--- a/node_modules/dht-infohash-crawler/lib/dhtcrawler.js
++++ b/node_modules/dht-infohash-crawler/lib/dhtcrawler.js
+@@ -152,21 +152,24 @@ class DHTCrawler extends events.EventEmitter {
+       let message;
+       try { message = bencode.decode(data); } catch (err) { return; }
+       
+-      /* 
+-       * It is not in the specification on BitTorrent.org, but BT clients add an extra 
+-       * key 'v' to the DHT messages, indicating the Version/Client. 
+-       * See http://getright.com/torrentdev.html As a crawler, we just ignore 'v' key.
+-       */
+       if (!message || message.hasOwnProperty('v') || !message.hasOwnProperty('y')) return;
+ 
+       const krpcReqString = message.y.toString();
+-      if (krpcReqString === 'r' && message.r.nodes) {
++      if (krpcReqString === 'r' && message.r && message.r.nodes) {
+         this.onKrpcFindNodeResponse(message.r.nodes);
+         return;
+       } 
+       
+       if (krpcReqString !== 'q' || !message.hasOwnProperty('q')) return;
+-      this._krpcReqDic[message.q.toString()].call(this, message, peerAddress);
++
++      const func = this._krpcReqDic[message.q.toString()];
++      if (func) {
++        func.call(this, message, peerAddress);
++
++      } else {
++        console.error('');
++      }
++      
+     } 
+     catch (err) { 
+       console.error(err);

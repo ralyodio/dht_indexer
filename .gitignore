@@ -16,6 +16,7 @@ node_modules/
 package-lock.json
 .env
 *.db
+tmp/
 
 # VS Code
 .vscode/*

@@ -6,7 +6,7 @@ import { join } from 'path';
 const { 
     indentation, 
     hashHuntersPort, 
-    numberOfHunters 
+    csvFilePath
 } = configs;
 
 
@@ -87,7 +87,7 @@ const torrentHashHunters = (numOfCrawlers) => {
 
 
 const _writeInfoHashToFile = (infoHashToSave) => {
-    const filePath = join(process.cwd(), './example/initial_hashes.csv');
+    const filePath = csvFilePath;
     
     let infoHash = infoHashToSave
         .replace(/(\r\n|\n|\r)/gm, "")
@@ -115,4 +115,4 @@ const _writeInfoHashToFile = (infoHashToSave) => {
 }
 
 
-torrentHashHunters(numberOfHunters);
+export default{ torrentHashHunters };

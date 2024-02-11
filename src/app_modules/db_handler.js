@@ -3,12 +3,15 @@ import { join } from 'path';
 import sqlite3 from 'sqlite3';
 const { Database } = sqlite3.verbose();
 import configs from '../configs_router/configs.js';
+import memoryHandler from './memory_handler.js';
+
+const { checkIfDbDirExits } = memoryHandler;
 const {databaseDirectory, indentation} = configs;
 
 
 let db;
 const openConnection = (dbName) => {
-    const pathToDb = `${_checkIfDbDirExits()}/${dbName}.db`;
+    const pathToDb = `${checkIfDbDirExits(databaseDirectory)}/${dbName}.db`;
 
     return new Promise((resolve, reject) => {
         db = new Database(pathToDb, async (err) => {
@@ -64,15 +67,6 @@ const _createTable = (tableName, fields) => {
             }
         });
     });
-}
-
-
-const _checkIfDbDirExits = () => {
-    const dir = join(process.cwd(), databaseDirectory);
-    if (!existsSync(dir)) {
-        mkdirSync(dir);
-    }
-    return dir;
 }
 
 

@@ -7,8 +7,7 @@
     "scripts": {
         "start": "node --no-warnings src/main.js",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "hash_hunter": "node src/app_modules/hashs_hunter.js"
-        
+        "postinstall": "patch-package"
     },
     "repository": {
         "type": "git",
@@ -28,9 +27,14 @@
     "dependencies": {
         "bittorrent-dht": "~11.0.5",
         "dht-infohash-crawler": "~0.3.2",
+        "fast-csv": "~5.0.0",
         "magnet-uri": "~7.0.5",
         "sqlite3": "~5.1.7",
         "toml": "~3.0.0",
         "webtorrent": "~2.1.34"
+    },
+    "devDependencies": {
+        "patch-package": "~8.0.0",
+        "postinstall-postinstall": "~2.1.0"
     }
 }

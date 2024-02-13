@@ -114,6 +114,8 @@ const _extractFilesInfo = async (infoHash, files, name) => {
 
     insertFilesBulkInfo(filesDetails)
         .then(() => {
+            console.log('\n-----------------------------------------------\n');
+            console.log(`Discovered new infoHash:\n---> ${infoHash}\n`);
             console.log('------------------------------------------------');
             console.log(`${indentation(4)}>>> collected torrent files: ${files.length} files <<<`);
             console.log('------------------------------------------------');

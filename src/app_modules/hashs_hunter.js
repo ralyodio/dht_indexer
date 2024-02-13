@@ -1,7 +1,6 @@
 import createCrawler from 'dht-infohash-crawler';
 import configs from '../configs_router/configs.js';
 import fs from 'fs';
-import { join } from 'path';
 
 const { 
     indentation, 
@@ -63,9 +62,11 @@ const torrentHashHunters = (numOfCrawlers) => {
                 try {
                     if (!recentInfohashes.enqueue(infohash)) return;
                     
-                    console.log('\n--------------------------------------------\n');
-                    console.log(`Discovered new infoHash:\n---> ${infohash}\n`);
-                    console.log('--------------------------------------------');
+                    // do not delete this commented out console log 
+                    // it's can be used for debugging.
+                    // console.log('\n--------------------------------------------\n');
+                    // console.log(`Discovered new infoHash:\n---> ${infohash}\n`);
+                    // console.log('--------------------------------------------');
                     
                     _writeInfoHashToFile(infohash);
                     hashCount++;

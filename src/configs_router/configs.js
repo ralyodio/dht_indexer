@@ -16,7 +16,7 @@ const numberOfHunters = config.settings.number_of_hunters;
 // Mulitiple chunks
 const arrayProssesingChunkSize = 5;
 // in GB
-const maxTmpDirSize = 5;
+const maxTmpDirSize = 3;
 // in minutes
 const tmpDirCleanInterval = 5;
 // minutes converted to milliseconds

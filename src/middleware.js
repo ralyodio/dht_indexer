@@ -132,6 +132,11 @@ const _runIndexSession = async (chunks) => {
 };
 
 
+const exitCleanups = () => {
+    checkAndCleanTempDir(tempDir, 0);
+}
+
+
 export default {
     indexer,
     closeConnection,
@@ -139,6 +144,7 @@ export default {
     hashsArray,
     csvFilePath,
     checkAndCleanTempDir,
+    exitCleanups,
     tempDir,
     startStream,
 };

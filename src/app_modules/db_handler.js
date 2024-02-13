@@ -170,7 +170,7 @@ const closeConnection = () => {
         if (err) {
             console.error(err.message);
         }
-        console.log('\n>>> Close the database connection.<<<\n');
+        console.log('\n>>> Closing database connection <<<\n');
     });
 }
 

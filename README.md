@@ -2,7 +2,7 @@
 
 1. Clone the repository
 ```bash
-git clone https://github.com/0xf333/dht_indexer.git
+git clone https://github.com/ralyodio/dht_indexer.git
 ```
 
 2. Install dependencies

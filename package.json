@@ -11,19 +11,19 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/0xf333/dht_indexer.git"
+        "url": "https://github.com/ralyodio/dht_indexer.git"
     },
     "keywords": [
         "indexer",
         "torrent",
         "dht"
     ],
-    "author": "0xf333",
+    "author": "profullstack",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/0xf333/dht_indexer/issues"
+        "url": "https://github.com/ralyodio/dht_indexer/issues"
     },
-    "homepage": "https://github.com/0xf333/dht_indexer#readme",
+    "homepage": "https://github.com/ralyodio/dht_indexer#readme",
     "dependencies": {
         "bittorrent-dht": "~11.0.5",
         "dht-infohash-crawler": "~0.3.2",

@@ -19,8 +19,10 @@ const openConnection = (dbName) => {
                 console.error(err.message);
                 reject(err);
             } else {
-                console.log(`${indentation(4)}---> Starting a database...`);
-                console.log('------------------------------------------------\n');
+                console.log(
+                    `${indentation(4)}---> Starting a database...\n` +
+                    '------------------------------------------------\n'
+                );
 
                 try {
                     await _createTable('torrents', `

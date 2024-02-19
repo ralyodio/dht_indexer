@@ -45,8 +45,10 @@ setInterval(() => {
 
 const recentInfohashes = new customBuffer(1024);
 const torrentHashHunters = (numOfCrawlers) => {
-    console.log('\n>>> Starting torrent hash search...');
-    console.log(`${indentation(4)}---> Number of DHT crawlers: ${numOfCrawlers}\n`);
+    console.log(
+        '\n>>> Starting torrent hash search...\n' +
+        `${indentation(4)}---> Number of DHT crawlers: ${numOfCrawlers}\n`
+    );
 
     Array(numOfCrawlers >= 5 ? 5 : numOfCrawlers)
         .fill(undefined)

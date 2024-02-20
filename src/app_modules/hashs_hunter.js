@@ -2,9 +2,9 @@ import createCrawler from 'dht-infohash-crawler';
 import configs from '../configs_router/configs.js';
 import fs from 'fs';
 
-const { 
-    indentation, 
-    hashHuntersPort, 
+const {
+    indentation,
+    hashHuntersPort,
     csvFilePath
 } = configs;
 
@@ -36,6 +36,7 @@ class customBuffer {
     }
 }
 
+
 let hashCount = 0;
 setInterval(() => {
     console.log(`\n>>> Number of new hashes fund in the last 15 minutes: ${hashCount}\n`);
@@ -59,17 +60,17 @@ const torrentHashHunters = (numOfCrawlers) => {
                 kbucketSize: KBUCKET_SIZE,
                 name: `Hunter --> ${index + 1}`
             });
-        
+
             crawler.on('infohash', (infohash, peerId, peerAddr) => {
                 try {
                     if (!recentInfohashes.enqueue(infohash)) return;
-                    
+
                     // do not delete this commented out console log 
                     // it's can be used for debugging.
                     // console.log('\n--------------------------------------------\n');
                     // console.log(`Discovered new infoHash:\n---> ${infohash}\n`);
                     // console.log('--------------------------------------------');
-                    
+
                     _writeInfoHashToFile(infohash);
                     hashCount++;
 
@@ -83,32 +84,32 @@ const torrentHashHunters = (numOfCrawlers) => {
             });
 
         });
-    
-        console.log('>>> Now hunting for new infoHashes...\n')
+
+    console.log('>>> Now hunting for new infoHashes...\n')
 
 }
 
 
 const _writeInfoHashToFile = (infoHashToSave) => {
     const filePath = csvFilePath;
-    
+
     let infoHash = infoHashToSave
         .replace(/(\r\n|\n|\r)/gm, "")
         .toUpperCase();
-    
+
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
             console.error(`Failed to read file: ${err}`);
             return;
         }
-        
+
         let fileData = data
             .endsWith('\n') ? data : data.concat('\n');
 
         fileData = fileData
             .concat(infoHash)
             .concat('\n');
-        
+
         fs.writeFile(filePath, fileData, (err) => {
             if (err) {
                 console.error(`Failed to write infoHash to file: ${err}`);
@@ -118,4 +119,4 @@ const _writeInfoHashToFile = (infoHashToSave) => {
 }
 
 
-export default{ torrentHashHunters };
+export default { torrentHashHunters };

@@ -15,11 +15,10 @@ const {
 } = dbHandler;
 
 const {
-    timeInterval,
+    timeDelay,
     dhtPort,
     databaseName,
     indentation,
-    getInitialHashes,
     csvFilePath,
     tempDir,
     tmpDirCleanInterval,
@@ -28,17 +27,17 @@ const {
 } = configs;
 
 
-const dht = new DHT()
-let visited = new Set()
-
-let hashsArray = getInitialHashes(csvFilePath);
+const dht = new DHT();
+let visited = new Set();
 
 openConnection(databaseName).then(() => {
     console.log(
         `${indentation(4)}---> Connection to database established\n\n` +
-        `>>> Time interval set to check every ${timeInterval} minutes <<<\n` +
-        `${indentation(3)}---> Please wait for the tracking session to start...\n\n` +
-        '================================================\n'
+        `>>> Metadata collection time delay set to ${timeDelay} seconds <<<\n` +
+        '\n================================================\n' +
+        `\n>>> Please wait | ${timeDelay} | seconds...\n` +
+        `${indentation(4)}---> the indexer is collecting initial metadata\n` +
+        '\n================================================\n'
     );
 });
 
@@ -84,7 +83,7 @@ const _readAndProcessCSV = (filePath) => {
     let csvStream = parse()
         .on('data', (record) => {
             currentChunk.push(...record);
-            
+
             if (currentChunk.length === chunkSize) {
                 chunks.push(currentChunk);
                 currentChunk = [];
@@ -143,7 +142,6 @@ export default {
     indexer,
     closeConnection,
     indentation,
-    hashsArray,
     csvFilePath,
     checkAndCleanTempDir,
     exitCleanups,

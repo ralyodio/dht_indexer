@@ -78,16 +78,18 @@ const trackTorrent = (infoHash) => {
             let name = torrentInfo.name;
             let seeders = torrentInfo.seeders.size;
             let leechers = torrentInfo.leechers.size;
-            
-            console.log(`--> | Name: ${name}`);
-            console.log(`--> | InfoHash: ${infoHash}`)
-            console.log(`--> | Seeders (peers): ${seeders}`)
-            console.log(`--> | Leechers: ${leechers}`)
+
+            console.log(
+                `--> | Name: ${name}\n` +
+                `--> | InfoHash: ${infoHash}\n` +
+                `--> | Seeders (peers): ${seeders}\n` +
+                `--> | Leechers: ${leechers}`
+            );
             
             insertTorrent(infoHash, name, seeders, leechers)
                 .then(() => {
-                    console.log('\n===> Seeder/Leecher counts updated in the database\n');
-                    console.log('###########################################\n');
+                    console.log('\n===> Seeder/Leecher counts updated in the database\n' +
+                        '###########################################\n');
                 })
                 .catch((err) => {
                     console.error('\nxxxxx Error updating database:', err);
@@ -114,11 +116,13 @@ const _extractFilesInfo = async (infoHash, files, name) => {
 
     insertFilesBulkInfo(filesDetails)
         .then(() => {
-            console.log('\n-----------------------------------------------\n');
-            console.log(`Discovered new infoHash:\n---> ${infoHash}\n`);
-            console.log('------------------------------------------------');
-            console.log(`${indentation(4)}>>> collected torrent files: ${files.length} files <<<`);
-            console.log('------------------------------------------------');
+            console.log(
+                '\n-----------------------------------------------\n' +
+                `Discovered new infoHash:\n---> ${infoHash}\n` +
+                '------------------------------------------------\n' +
+                `${indentation(4)}>>> collected torrent files: ${files.length} files <<<\n` +
+                '------------------------------------------------'
+            );
         })
         .catch((err) => {
             console.error('\nxxxxx Error updating file info in database:', err);

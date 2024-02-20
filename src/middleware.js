@@ -34,20 +34,22 @@ let visited = new Set()
 let hashsArray = getInitialHashes(csvFilePath);
 
 openConnection(databaseName).then(() => {
-    console.log(`${indentation(4)}---> Connection to database established\n`);
     console.log(
-        `>>> Time interval set to check every ${timeInterval} minutes <<<\n`,
-        `${indentation(3)}---> Please wait for the tracking session to start...\n`,
+        `${indentation(4)}---> Connection to database established\n\n` +
+        `>>> Time interval set to check every ${timeInterval} minutes <<<\n` +
+        `${indentation(3)}---> Please wait for the tracking session to start...\n\n` +
+        '================================================\n'
     );
-    console.log('================================================\n');
 });
 
 
 let isSocketBound = false;
 if (!isSocketBound) {
     dht.listen(dhtPort, () => {
-        console.log('------------------------------------------------');
-        console.log('>>>> Starting tracking and indexing session <<<<')
+        console.log(
+            '------------------------------------------------\n' +
+            '>>>> Starting tracking and indexing session <<<<'
+        );
     });
 
     isSocketBound = true;

@@ -14,12 +14,14 @@ const main = () => {
 process.on('SIGINT', () => {
     console.log(`${indentation(4)}<--- Closing the dht_indexer\n`);
     
+    closeConnection();
+
     exitCleanups();
     setTimeout(() => {
         process.exit();
     }, 3000);
 
-    closeConnection();
+    
 
 });
 

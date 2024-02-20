@@ -89,7 +89,7 @@ const trackTorrent = (infoHash) => {
             insertTorrent(infoHash, name, seeders, leechers)
                 .then(() => {
                     console.log('\n===> Seeder/Leecher counts updated in the database\n' +
-                        '###########################################\n');
+                        '\n################################################\n');
                 })
                 .catch((err) => {
                     console.error('\nxxxxx Error updating database:', err);
@@ -117,9 +117,9 @@ const _extractFilesInfo = async (infoHash, files, name) => {
     insertFilesBulkInfo(filesDetails)
         .then(() => {
             console.log(
-                '\n-----------------------------------------------\n' +
-                `Discovered new infoHash:\n---> ${infoHash}\n` +
-                '------------------------------------------------\n' +
+                '-----------------------------------------------\n' +
+                `\nDiscovered new infoHash:\n---> ${infoHash}\n` +
+                '\n------------------------------------------------\n' +
                 `${indentation(4)}>>> collected torrent files: ${files.length} files <<<\n` +
                 '------------------------------------------------'
             );

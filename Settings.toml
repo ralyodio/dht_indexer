@@ -1,7 +1,7 @@
 [settings]
 database_name = "tracker_database"
 database_dir_name = "database"
-time_interval = 10
 dht_port = 20000
 hash_hunters_port = 6881
 number_of_hunters = 4
+metada_collection_time_delay = 10

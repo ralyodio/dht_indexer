@@ -3,10 +3,10 @@ import hashesHunter from './hashs_hunter.js'
 import configs from '../configs_router/configs.js';
 import WebTorrent from 'webtorrent'
 
-const { 
-    insertTorrent, 
-    insertFilesBulkInfo, 
-    addProcessedHash, 
+const {
+    insertTorrent,
+    insertFilesBulkInfo,
+    addProcessedHash,
     checkProcessedHash,
 } = dbHandler;
 
@@ -14,23 +14,21 @@ const {
     torrentHashHunters,
 } = hashesHunter;
 
-const { 
-    indentation, 
-    numberOfHunters, 
+const {
+    indentation,
+    numberOfHunters,
     tempDir,
-    millisecondsTimeInterval
+    millisecondsTimeDelay
 } = configs;
 
 
-
 const client = new WebTorrent();
-
 
 const trackTorrent = (infoHash) => {
 
     const torrentOptions = {
         storeCacheSlots: 0,
-        path: tempDir  
+        path: tempDir
     };
 
     client.add(infoHash, torrentOptions, async (torrent) => {
@@ -41,11 +39,22 @@ const trackTorrent = (infoHash) => {
         };
 
         await checkProcessedHash(infoHash)
-            .then(async (exists) => {
+            .then((exists) => {
                 if (!exists) {
-                    await _extractFilesInfo(infoHash, torrent.files, torrent.name);
-                    await addProcessedHash(infoHash);
+                    setTimeout(async () => {
+                        await _extractFilesInfo(infoHash, torrent.files);
+                        await addProcessedHash(infoHash);
+
+                        _updateTorrentInfo(torrentInfo, infoHash);
+                    }, millisecondsTimeDelay);
+
+                } else {
+                    setTimeout(() => {
+                        _updateTorrentInfo(torrentInfo, infoHash);
+                    }, millisecondsTimeDelay);
+
                 }
+
             })
             .catch((err) => {
                 console.error('\nxxxxx Error checking for processed hash:', err);
@@ -69,44 +78,37 @@ const trackTorrent = (infoHash) => {
                 if (torrentInfo.leechers.has(uniqueId)) {
                     torrentInfo.leechers.delete(uniqueId);
                 }
-            });          
+            });
         });
-
-        // Function to be run immediately once the CLI app start 
-        // and periodically after that.
-        const updateTorrentInfo = () => {
-            let name = torrentInfo.name;
-            let seeders = torrentInfo.seeders.size;
-            let leechers = torrentInfo.leechers.size;
-
-            console.log(
-                `--> | Name: ${name}\n` +
-                `--> | InfoHash: ${infoHash}\n` +
-                `--> | Seeders (peers): ${seeders}\n` +
-                `--> | Leechers: ${leechers}`
-            );
-            
-            insertTorrent(infoHash, name, seeders, leechers)
-                .then(() => {
-                    console.log('\n===> Seeder/Leecher counts updated in the database\n' +
-                        '\n################################################\n');
-                })
-                .catch((err) => {
-                    console.error('\nxxxxx Error updating database:', err);
-                });
-        };
-
-        updateTorrentInfo();
-        setInterval(
-            updateTorrentInfo, 
-            millisecondsTimeInterval
-        );
 
     });
 };
 
 
-const _extractFilesInfo = async (infoHash, files, name) => {
+const _updateTorrentInfo = (_torrentInfo, _infoHash) => {
+    let name = _torrentInfo.name;
+    let seeders = _torrentInfo.seeders.size;
+    let leechers = _torrentInfo.leechers.size;
+
+    console.log(
+        `--> | Name: ${name}\n` +
+        `--> | InfoHash: ${_infoHash}\n` +
+        `--> | Seeders (peers): ${seeders}\n` +
+        `--> | Leechers: ${leechers}`
+    );
+
+    insertTorrent(_infoHash, name, seeders, leechers)
+        .then(() => {
+            console.log('\n===> Seeder/Leecher counts updated in the database\n' +
+                '\n################################################\n');
+        })
+        .catch((err) => {
+            console.error('\nxxxxx Error updating database:', err);
+        });
+};
+
+
+const _extractFilesInfo = async (infoHash, files) => {
 
     const filesDetails = files.map((file) => ({
         infoHash,
@@ -117,7 +119,7 @@ const _extractFilesInfo = async (infoHash, files, name) => {
     insertFilesBulkInfo(filesDetails)
         .then(() => {
             console.log(
-                '-----------------------------------------------\n' +
+                '------------------------------------------------\n' +
                 `\nDiscovered new infoHash:\n---> ${infoHash}\n` +
                 '\n------------------------------------------------\n' +
                 `${indentation(4)}>>> collected torrent files: ${files.length} files <<<\n` +
@@ -132,4 +134,5 @@ const _extractFilesInfo = async (infoHash, files, name) => {
 
 torrentHashHunters(numberOfHunters);
 
-export default {trackTorrent};
+
+export default { trackTorrent };

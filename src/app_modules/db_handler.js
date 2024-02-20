@@ -1,12 +1,10 @@
-import { existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
 import sqlite3 from 'sqlite3';
 const { Database } = sqlite3.verbose();
 import configs from '../configs_router/configs.js';
 import memoryHandler from './memory_handler.js';
 
 const { checkIfDbDirExits } = memoryHandler;
-const {databaseDirectory, indentation} = configs;
+const { databaseDirectory, indentation } = configs;
 
 
 let db;

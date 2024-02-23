@@ -27,11 +27,11 @@
     "dependencies": {
         "bittorrent-dht": "~11.0.5",
         "dht-infohash-crawler": "~0.3.2",
-        "fast-csv": "~5.0.0",
+        "fast-csv": "~5.0.1",
         "magnet-uri": "~7.0.5",
         "sqlite3": "~5.1.7",
         "toml": "~3.0.0",
-        "webtorrent": "~2.1.34"
+        "webtorrent": "~2.1.36"
     },
     "devDependencies": {
         "patch-package": "~8.0.0",
